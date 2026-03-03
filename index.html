@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HRIS Developer Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #6366f1;
+    --primary-dark: #4f46e5;
+    --primary-light: #a5b4fc;
+    --accent: #10b981;
+    --accent2: #f59e0b;
+    --surface: #0f172a;
+    --surface2: #1e293b;
+    --surface3: #334155;
+    --text: #f1f5f9;
+    --text-muted: #94a3b8;
+    --text-dim: #64748b;
+    --border: rgba(99,102,241,0.2);
+    --glow: rgba(99,102,241,0.15);
+    --radius: 16px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background: var(--surface);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── NOISE OVERLAY ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── BACKGROUND BLOBS ── */
+  .bg-blobs {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .blob {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    opacity: 0.12;
+  }
+  .blob-1 { width: 600px; height: 600px; background: var(--primary); top: -200px; left: -200px; }
+  .blob-2 { width: 500px; height: 500px; background: var(--accent); bottom: -150px; right: -150px; }
+  .blob-3 { width: 400px; height: 400px; background: var(--accent2); top: 40%; left: 40%; }
+
+  /* ── LAYOUT ── */
+  .container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 16px 0;
+    background: rgba(15,23,42,0.8);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  nav .inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .nav-logo {
+    font-weight: 800;
+    font-size: 1.1rem;
+    background: linear-gradient(135deg, var(--primary-light), var(--primary));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.5px;
+  }
+  .nav-links { display: flex; gap: 32px; list-style: none; }
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--primary);
+    color: #fff !important;
+    padding: 8px 20px;
+    border-radius: 8px;
+    font-weight: 600 !important;
+    transition: background 0.2s !important;
+  }
+  .nav-cta:hover { background: var(--primary-dark) !important; color: #fff !important; }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding-top: 80px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    align-items: center;
+    width: 100%;
+  }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(99,102,241,0.1);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 16px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    margin-bottom: 24px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .hero-badge .dot {
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(1.4); }
+  }
+  .hero h1 {
+    font-size: clamp(2.5rem, 5vw, 3.8rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin-bottom: 20px;
+  }
+  .hero h1 .line2 {
+    background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 50%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero-sub {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    margin-bottom: 40px;
+    max-width: 480px;
+  }
+  .hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--primary);
+    color: #fff;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover { background: var(--primary-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(99,102,241,0.4); }
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: transparent;
+    color: var(--text-muted);
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    border: 1px solid var(--surface3);
+    transition: all 0.2s;
+    cursor: pointer;
+  }
+  .btn-ghost:hover { border-color: var(--primary); color: var(--text); }
+
+  /* ── HERO VISUAL ── */
+  .hero-visual {
+    position: relative;
+  }
+  .dashboard-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+    position: relative;
+    overflow: hidden;
+  }
+  .dashboard-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--primary), transparent);
+  }
+  .dc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+  }
+  .dc-title { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); }
+  .dc-dots { display: flex; gap: 6px; }
+  .dc-dots span {
+    width: 8px; height: 8px; border-radius: 50%;
+  }
+  .dc-dots span:nth-child(1) { background: #ef4444; }
+  .dc-dots span:nth-child(2) { background: #f59e0b; }
+  .dc-dots span:nth-child(3) { background: #10b981; }
+  .dc-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .dc-stat {
+    background: var(--surface3);
+    border-radius: 12px;
+    padding: 14px;
+    border: 1px solid rgba(255,255,255,0.05);
+  }
+  .dc-stat-val { font-size: 1.4rem; font-weight: 800; margin-bottom: 2px; }
+  .dc-stat-lbl { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+  .dc-stat-val.green { color: var(--accent); }
+  .dc-stat-val.purple { color: var(--primary-light); }
+  .dc-stat-val.amber { color: var(--accent2); }
+  .dc-rows { display: flex; flex-direction: column; gap: 8px; }
+  .dc-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    background: var(--surface3);
+    border-radius: 10px;
+    border: 1px solid rgba(255,255,255,0.04);
+  }
+  .dc-avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .dc-row-info { flex: 1; }
+  .dc-row-name { font-size: 0.8rem; font-weight: 600; }
+  .dc-row-role { font-size: 0.7rem; color: var(--text-muted); }
+  .dc-badge {
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-green { background: rgba(16,185,129,0.15); color: #10b981; }
+  .badge-amber { background: rgba(245,158,11,0.15); color: #f59e0b; }
+  .badge-purple { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+  .floating-pill {
+    position: absolute;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 8px 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    white-space: nowrap;
+  }
+  .pill-1 { top: -20px; right: 20px; color: var(--accent); }
+  .pill-2 { bottom: -16px; left: 10px; color: var(--accent2); }
+  .pill-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+  /* ── SECTION BASE ── */
+  section { padding: 100px 0; }
+  .section-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+  }
+  .section-label::before {
+    content: '';
+    width: 20px; height: 2px;
+    background: var(--primary);
+    border-radius: 2px;
+  }
+  .section-title {
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    font-weight: 800;
+    letter-spacing: -1px;
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+  .section-sub {
+    color: var(--text-muted);
+    font-size: 1rem;
+    line-height: 1.7;
+    max-width: 560px;
+  }
+
+  /* ── STATS BAR ── */
+  .stats-bar {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 40px 48px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .stats-bar::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--primary), var(--accent), var(--accent2), var(--primary));
+  }
+  .stat-item {
+    text-align: center;
+    padding: 0 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat-item:last-child { border-right: none; }
+  .stat-num {
+    font-size: 2.8rem;
+    font-weight: 900;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .stat-num.c1 { color: var(--primary-light); }
+  .stat-num.c2 { color: var(--accent); }
+  .stat-num.c3 { color: var(--accent2); }
+  .stat-num.c4 { color: #f472b6; }
+  .stat-label { font-size: 0.85rem; color: var(--text-muted); font-weight: 500; }
+
+  /* ── MODULES ── */
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 56px;
+  }
+  .module-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+    cursor: default;
+  }
+  .module-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transition: opacity 0.3s;
+    background: radial-gradient(circle at 50% 0%, var(--glow), transparent 70%);
+  }
+  .module-card:hover { border-color: var(--primary); transform: translateY(-4px); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .module-card:hover::after { opacity: 1; }
+  .module-icon {
+    width: 48px; height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 16px;
+  }
+  .module-title { font-size: 1rem; font-weight: 700; margin-bottom: 8px; }
+  .module-desc { font-size: 0.83rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 16px; }
+  .module-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-size: 0.68rem;
+    font-weight: 600;
+    padding: 3px 10px;
+    border-radius: 100px;
+    background: rgba(99,102,241,0.1);
+    color: var(--primary-light);
+    border: 1px solid rgba(99,102,241,0.2);
+    letter-spacing: 0.3px;
+  }
+
+  /* ── TECH STACK ── */
+  .tech-section { background: var(--surface2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+  .tech-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 16px;
+    margin-top: 48px;
+  }
+  .tech-card {
+    background: var(--surface3);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+    transition: all 0.2s;
+  }
+  .tech-card:hover { border-color: var(--primary); background: rgba(99,102,241,0.08); transform: translateY(-2px); }
+  .tech-icon { font-size: 1.6rem; margin-bottom: 8px; }
+  .tech-name { font-size: 0.75rem; font-weight: 600; color: var(--text-muted); }
+
+  /* ── EXPERIENCE ── */
+  .timeline { margin-top: 56px; position: relative; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px; top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--primary), transparent);
+  }
+  .timeline-item {
+    display: flex;
+    gap: 32px;
+    margin-bottom: 40px;
+    padding-left: 56px;
+    position: relative;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: 12px;
+    top: 4px;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid var(--surface);
+    box-shadow: 0 0 0 4px rgba(99,102,241,0.2);
+    flex-shrink: 0;
+  }
+  .timeline-card {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px 28px;
+    flex: 1;
+    transition: border-color 0.2s;
+  }
+  .timeline-card:hover { border-color: var(--primary); }
+  .tl-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; flex-wrap: wrap; gap: 8px; }
+  .tl-role { font-size: 1rem; font-weight: 700; }
+  .tl-period {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--primary-light);
+    background: rgba(99,102,241,0.1);
+    padding: 4px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--border);
+  }
+  .tl-company { font-size: 0.85rem; color: var(--accent); font-weight: 600; margin-bottom: 12px; }
+  .tl-desc { font-size: 0.85rem; color: var(--text-muted); line-height: 1.7; }
+  .tl-bullets { list-style: none; margin-top: 12px; display: flex; flex-direction: column; gap: 6px; }
+  .tl-bullets li {
+    font-size: 0.83rem;
+    color: var(--text-muted);
+    padding-left: 16px;
+    position: relative;
+    line-height: 1.6;
+  }
+  .tl-bullets li::before {
+    content: '▸';
+    position: absolute;
+    left: 0;
+    color: var(--primary-light);
+    font-size: 0.7rem;
+    top: 2px;
+  }
+
+  /* ── SKILLS ── */
+  .skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    margin-top: 56px;
+  }
+  .skill-group-title {
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--primary-light);
+    margin-bottom: 20px;
+  }
+  .skill-bars { display: flex; flex-direction: column; gap: 16px; }
+  .skill-bar-item {}
+  .skill-bar-top {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+  }
+  .skill-bar-name { font-size: 0.85rem; font-weight: 600; }
+  .skill-bar-pct { font-size: 0.8rem; color: var(--text-muted); font-family: 'JetBrains Mono', monospace; }
+  .skill-bar-track {
+    height: 6px;
+    background: var(--surface3);
+    border-radius: 100px;
+    overflow: hidden;
+  }
+  .skill-bar-fill {
+    height: 100%;
+    border-radius: 100px;
+    background: linear-gradient(90deg, var(--primary), var(--primary-light));
+    transition: width 1s ease;
+  }
+  .skill-bar-fill.green { background: linear-gradient(90deg, var(--accent), #34d399); }
+  .skill-bar-fill.amber { background: linear-gradient(90deg, var(--accent2), #fcd34d); }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--surface2);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .cta-inner {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+  .cta-inner .section-title { margin-bottom: 16px; }
+  .cta-inner p { color: var(--text-muted); font-size: 1rem; line-height: 1.7; margin-bottom: 40px; }
+  .cta-cards {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 40px;
+  }
+  .contact-card {
+    background: var(--surface3);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.2s;
+    text-decoration: none;
+    color: var(--text);
+  }
+  .contact-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+  .contact-card .icon { font-size: 1.2rem; }
+  .contact-card .info .label { font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .contact-card .info .val { font-size: 0.85rem; font-weight: 600; }
+
+  /* ── FOOTER ── */
+  footer {
+    padding: 32px 0;
+    border-top: 1px solid var(--border);
+    text-align: center;
+    color: var(--text-dim);
+    font-size: 0.8rem;
+  }
+  footer span { color: var(--primary-light); }
+
+  /* ── SCROLL REVEAL ── */
+  .reveal { opacity: 0; transform: translateY(30px); transition: all 0.6s ease; }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; }
+    .hero-visual { display: none; }
+    .modules-grid { grid-template-columns: 1fr 1fr; }
+    .stats-bar { grid-template-columns: 1fr 1fr; gap: 24px; }
+    .stat-item { border-right: none; border-bottom: 1px solid var(--border); padding-bottom: 24px; }
+    .stat-item:nth-child(2n) { border-right: none; }
+    .stat-item:last-child { border-bottom: none; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 600px) {
+    .modules-grid { grid-template-columns: 1fr; }
+    section { padding: 64px 0; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bg-blobs">
+  <div class="blob blob-1"></div>
+  <div class="blob blob-2"></div>
+  <div class="blob blob-3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="inner">
+    <div class="nav-logo">{ dev.hris }</div>
+    <ul class="nav-links">
+      <li><a href="#modules">Modules</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#contact" class="nav-cta">Hire Me</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-badge">
+          <span class="dot"></span>
+          Available for new projects
+        </div>
+        <h1>
+          Full-Stack Web<br/>
+          <span class="line2">HRIS Specialist</span>
+        </h1>
+        <p class="hero-sub">
+          Building enterprise-grade Human Resource Information Systems with relational database design, intuitive UI/UX, and end-to-end module development — from Recruitment to Payroll.
+        </p>
+        <div class="hero-actions">
+          <a href="#modules" class="btn-primary">
+            <span>⚡</span> View Modules
+          </a>
+          <a href="#contact" class="btn-ghost">
+            <span>✉</span> Get in Touch
+          </a>
+        </div>
+      </div>
+
+      <!-- DASHBOARD MOCKUP -->
+      <div class="hero-visual">
+        <div style="position:relative; padding: 20px 20px 20px 0;">
+          <div class="floating-pill pill-1">
+            <span class="pill-dot" style="background:var(--accent)"></span>
+            384 Employees Active
+          </div>
+          <div class="dashboard-card">
+            <div class="dc-header">
+              <span class="dc-title">HRIS Dashboard</span>
+              <div class="dc-dots"><span></span><span></span><span></span></div>
+            </div>
+            <div class="dc-stats">
+              <div class="dc-stat">
+                <div class="dc-stat-val green">384</div>
+                <div class="dc-stat-lbl">Employees</div>
+              </div>
+              <div class="dc-stat">
+                <div class="dc-stat-val purple">12</div>
+                <div class="dc-stat-lbl">Open Roles</div>
+              </div>
+              <div class="dc-stat">
+                <div class="dc-stat-val amber">₱2.4M</div>
+                <div class="dc-stat-lbl">Payroll</div>
+              </div>
+            </div>
+            <div class="dc-rows">
+              <div class="dc-row">
+                <div class="dc-avatar" style="background:rgba(99,102,241,0.2);color:#a5b4fc;">JD</div>
+                <div class="dc-row-info">
+                  <div class="dc-row-name">Juan Dela Cruz</div>
+                  <div class="dc-row-role">Senior Engineer · MAIN</div>
+                </div>
+                <span class="dc-badge badge-green">Active</span>
+              </div>
+              <div class="dc-row">
+                <div class="dc-avatar" style="background:rgba(245,158,11,0.2);color:#f59e0b;">MA</div>
+                <div class="dc-row-info">
+                  <div class="dc-row-name">Maria Amora</div>
+                  <div class="dc-row-role">HR Manager · BRH-02</div>
+                </div>
+                <span class="dc-badge badge-amber">On Leave</span>
+              </div>
+              <div class="dc-row">
+                <div class="dc-avatar" style="background:rgba(16,185,129,0.2);color:#10b981;">RC</div>
+                <div class="dc-row-info">
+                  <div class="dc-row-name">Rico Cruz</div>
+                  <div class="dc-row-role">Accountant · MAIN</div>
+                </div>
+                <span class="dc-badge badge-purple">New Hire</span>
+              </div>
+            </div>
+          </div>
+          <div class="floating-pill pill-2">
+            <span class="pill-dot" style="background:var(--accent2)"></span>
+            3 Payroll runs this month
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="padding: 0 0 80px;">
+  <div class="container">
+    <div class="stats-bar reveal">
+      <div class="stat-item">
+        <div class="stat-num c1">8+</div>
+        <div class="stat-label">Years Experience</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c2">15+</div>
+        <div class="stat-label">HRIS Modules Built</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c3">50+</div>
+        <div class="stat-label">DB Schemas Designed</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num c4">10+</div>
+        <div class="stat-label">Enterprise Clients</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section id="modules">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Core Expertise</div>
+      <h2 class="section-title">HRIS Modules<br/>I've Built End-to-End</h2>
+      <p class="section-sub">Every module designed with relational integrity, role-based access, audit trails, and mobile-responsive interfaces.</p>
+    </div>
+    <div class="modules-grid">
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(99,102,241,0.15);">👥</div>
+        <div class="module-title">Recruitment & Onboarding</div>
+        <div class="module-desc">End-to-end hiring pipeline — job postings, applicant tracking, interview scheduling, offer management, and digital onboarding workflows.</div>
+        <div class="module-tags">
+          <span class="tag">Job Posting</span>
+          <span class="tag">ATS</span>
+          <span class="tag">Interview Pipeline</span>
+          <span class="tag">Onboarding</span>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(16,185,129,0.15);">🧑‍💼</div>
+        <div class="module-title">Employee Management</div>
+        <div class="module-desc">Complete employee records — personal info, employment history, documents, org chart mapping, position management, and status tracking.</div>
+        <div class="module-tags">
+          <span class="tag">201 File</span>
+          <span class="tag">Org Chart</span>
+          <span class="tag">Position History</span>
+          <span class="tag">Documents</span>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(245,158,11,0.15);">⏱️</div>
+        <div class="module-title">Attendance & Leave</div>
+        <div class="module-desc">Biometric integration, shift scheduling, overtime computation, leave management with approval workflows and real-time balance tracking.</div>
+        <div class="module-tags">
+          <span class="tag">Biometrics</span>
+          <span class="tag">Shift Scheduling</span>
+          <span class="tag">Leave Credits</span>
+          <span class="tag">Overtime</span>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(244,114,182,0.15);">💰</div>
+        <div class="module-title">Payroll & Transactions</div>
+        <div class="module-desc">Full payroll computation with deductions, adjustments, allowances, 13th month pay, government remittances (SSS, PhilHealth, Pag-IBIG), and payslip generation.</div>
+        <div class="module-tags">
+          <span class="tag">Deductions</span>
+          <span class="tag">Adjustments</span>
+          <span class="tag">Gov Remittances</span>
+          <span class="tag">Payslip</span>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(6,182,212,0.15);">📋</div>
+        <div class="module-title">Charges & Deductions</div>
+        <div class="module-desc">Employee charge management, loan tracking, recurring deductions setup, balance monitoring, and automated payroll deduction integration.</div>
+        <div class="module-tags">
+          <span class="tag">Loans</span>
+          <span class="tag">Recurring</span>
+          <span class="tag">Balance Tracking</span>
+          <span class="tag">Auto-deduct</span>
+        </div>
+      </div>
+
+      <div class="module-card reveal">
+        <div class="module-icon" style="background:rgba(139,92,246,0.15);">📊</div>
+        <div class="module-title">Reports & Analytics</div>
+        <div class="module-desc">Dynamic reporting engine — headcount analytics, payroll summaries, attendance reports, government compliance reports, and exportable data.</div>
+        <div class="module-tags">
+          <span class="tag">Headcount</span>
+          <span class="tag">Compliance</span>
+          <span class="tag">Export PDF/Excel</span>
+          <span class="tag">Dashboards</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section id="stack" class="tech-section">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Tech Stack</div>
+      <h2 class="section-title">Tools & Technologies</h2>
+      <p class="section-sub">Modern, production-tested stack for building scalable enterprise web applications.</p>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card reveal"><div class="tech-icon">⚡</div><div class="tech-name">Vue / Nuxt</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">⚛️</div><div class="tech-name">React / Next</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🟢</div><div class="tech-name">Node.js</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🔷</div><div class="tech-name">TypeScript</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🐘</div><div class="tech-name">PostgreSQL</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🐬</div><div class="tech-name">MySQL</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🔴</div><div class="tech-name">Laravel</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🐋</div><div class="tech-name">Docker</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🎨</div><div class="tech-name">Tailwind CSS</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🔷</div><div class="tech-name">PrimeVue</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">🧠</div><div class="tech-name">Pinia / Vuex</div></div>
+      <div class="tech-card reveal"><div class="tech-icon">☁️</div><div class="tech-name">REST APIs</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Career History</div>
+      <h2 class="section-title">Work Experience</h2>
+    </div>
+    <div class="timeline">
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="tl-top">
+            <div class="tl-role">Senior Full-Stack Developer</div>
+            <div class="tl-period">2022 — Present</div>
+          </div>
+          <div class="tl-company">Enterprise Software Solutions Inc.</div>
+          <ul class="tl-bullets">
+            <li>Architected and developed a complete HRIS platform covering 15+ modules for 10+ enterprise clients</li>
+            <li>Designed normalized relational database schemas handling 500K+ employee records across multi-branch setups</li>
+            <li>Built payroll engine processing SSS, PhilHealth, Pag-IBIG, and BIR tax computations automatically</li>
+            <li>Led frontend architecture migration from legacy jQuery to Vue 3 + Nuxt with PrimeVue components</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="tl-top">
+            <div class="tl-role">Full-Stack Web Developer</div>
+            <div class="tl-period">2019 — 2022</div>
+          </div>
+          <div class="tl-company">HR Tech Startup · Iloilo City</div>
+          <ul class="tl-bullets">
+            <li>Built recruitment and applicant tracking systems used by 20+ companies in Western Visayas</li>
+            <li>Developed attendance management module integrated with biometric hardware via API</li>
+            <li>Implemented role-based access control and audit trail logging for compliance requirements</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-card">
+          <div class="tl-top">
+            <div class="tl-role">Junior Web Developer</div>
+            <div class="tl-period">2017 — 2019</div>
+          </div>
+          <div class="tl-company">Digital Agency · Iloilo</div>
+          <ul class="tl-bullets">
+            <li>Developed internal HR tools for client companies using Laravel and Vue.js</li>
+            <li>Designed and maintained MySQL databases with proper indexing and query optimization</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="container">
+    <div class="reveal">
+      <div class="section-label">Proficiency</div>
+      <h2 class="section-title">Skills Breakdown</h2>
+    </div>
+    <div class="skills-grid">
+      <div class="reveal">
+        <div class="skill-group-title">Frontend Development</div>
+        <div class="skill-bars">
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">Vue 3 / Nuxt</span><span class="skill-bar-pct">95%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:95%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">TypeScript</span><span class="skill-bar-pct">88%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:88%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">Tailwind CSS / PrimeVue</span><span class="skill-bar-pct">92%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:92%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">UI/UX Design</span><span class="skill-bar-pct">85%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill" style="width:85%"></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="skill-group-title">Backend & Database</div>
+        <div class="skill-bars">
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">Node.js / Express</span><span class="skill-bar-pct">90%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill green" style="width:90%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">MySQL / PostgreSQL</span><span class="skill-bar-pct">93%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill green" style="width:93%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">Database Schema Design</span><span class="skill-bar-pct">95%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill green" style="width:95%"></div></div>
+          </div>
+          <div class="skill-bar-item">
+            <div class="skill-bar-top"><span class="skill-bar-name">REST API Design</span><span class="skill-bar-pct">91%</span></div>
+            <div class="skill-bar-track"><div class="skill-bar-fill amber" style="width:91%"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="contact" class="cta-section">
+  <div class="container">
+    <div class="cta-inner reveal">
+      <div class="section-label" style="justify-content:center;">Let's Work Together</div>
+      <h2 class="section-title">Have an HRIS project<br/>in mind?</h2>
+      <p>Whether it's building from scratch, improving an existing system, or consulting on database architecture — I'm ready to help your team ship great software.</p>
+      <a href="mailto:hello@devhris.com" class="btn-primary" style="margin: 0 auto; display:inline-flex;">
+        <span>✉</span> Send me a message
+      </a>
+      <div class="cta-cards">
+        <a href="#" class="contact-card">
+          <span class="icon">💼</span>
+          <div class="info">
+            <div class="label">LinkedIn</div>
+            <div class="val">View Profile</div>
+          </div>
+        </a>
+        <a href="#" class="contact-card">
+          <span class="icon">🐙</span>
+          <div class="info">
+            <div class="label">GitHub</div>
+            <div class="val">View Repositories</div>
+          </div>
+        </a>
+        <a href="#" class="contact-card">
+          <span class="icon">📍</span>
+          <div class="info">
+            <div class="label">Location</div>
+            <div class="val">Iloilo, PH</div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <p>© 2026 <span>HRIS Developer Portfolio</span> · Built with precision & care · Iloilo, Philippines</p>
+  </div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(el => {
+      if (el.isIntersecting) {
+        el.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
